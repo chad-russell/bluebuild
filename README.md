@@ -1,8 +1,19 @@
-# BlueBuild Template &nbsp; [![bluebuild build badge](https://github.com/blue-build/template/actions/workflows/build.yml/badge.svg)](https://github.com/blue-build/template/actions/workflows/build.yml)
+# BlueBuild Template with Tailscale & Nix &nbsp; [![bluebuild build badge](https://github.com/blue-build/template/actions/workflows/build.yml/badge.svg)](https://github.com/blue-build/template/actions/workflows/build.yml)
+
+This is a custom image based on the BlueBuild template that includes Tailscale pre-installed from the official repository, with the Tailscale service enabled by default, running on Fedora Cosmic Atomic. Nix package manager can be installed manually after first boot.
 
 See the [BlueBuild docs](https://blue-build.org/how-to/setup/) for quick setup instructions for setting up your own repository based on this template.
 
 After setup, it is recommended you update this README to describe your custom image.
+
+## Features
+
+This image includes:
+- Fedora Cosmic Atomic base OS
+- Tailscale pre-installed from the official repository and service enabled
+- Nix package manager (available for manual installation)
+- Micro text editor
+- Firefox and Loupe image viewer as Flatpaks
 
 ## Installation
 
@@ -29,6 +40,14 @@ To rebase an existing atomic Fedora installation to the latest build:
   ```
 
 The `latest` tag will automatically point to the latest build. That build will still always use the Fedora version specified in `recipe.yml`, so you won't get accidentally updated to the next major version.
+
+## First Boot
+
+After installation, you'll need to:
+
+1. Reboot your system (if you haven't already after installation)
+2. For Tailscale: Run `sudo tailscale up` to authenticate and connect to your tailnet
+3. For Nix: Run `/usr/bin/install-nix.sh` to install the Nix package manager
 
 ## ISO
 

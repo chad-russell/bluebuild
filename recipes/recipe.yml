@@ -3,10 +3,10 @@
 # image will be published to ghcr.io/<user>/<name>
 name: template
 # description will be included in the image's metadata
-description: This is my personal OS image.
+description: This is my personal OS image with Tailscale pre-installed. Nix package manager available for manual installation.
 
 # the base image to build on top of (FROM) and the version tag to use
-base-image: ghcr.io/ublue-os/silverblue-main
+base-image: quay.io/fedora-ostree-desktops/cosmic-atomic
 image-version: 42 # latest is also supported if you want new updates ASAP
 
 # module configuration, executed in order
@@ -19,12 +19,17 @@ modules:
 
   - type: dnf
     repos:
-      copr:
-        - atim/starship
+      files:
+        - https://pkgs.tailscale.com/stable/fedora/tailscale.repo
+        - https://download.docker.com/linux/fedora/docker-ce.repo
     install:
       packages:
         - micro
-        - starship
+        - tailscale
+        - distrobox
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
     remove:
       packages:
         # example: removing firefox (in favor of the flatpak)
@@ -32,14 +37,7 @@ modules:
         - firefox
         - firefox-langpacks # also remove firefox dependency (not required for all packages, this is a special case)
 
-  - type: default-flatpaks
-    configurations:
-      - notify: true # Send notification after install/uninstall is finished (true/false)
-        scope: system
-        # If no repo information is specified, Flathub will be used by default
-        install: # system flatpaks we want all users to have and not remove
-          - org.mozilla.firefox
-          - org.gnome.Loupe
-      - scope: user # Also add Flathub user repo, but no user packages
-
-  - type: signing # this sets up the proper policy & signing files for signed images to work fully
+  - type: script
+    scripts:
+      - enable-tailscale.sh
+      - enable-docker.sh
